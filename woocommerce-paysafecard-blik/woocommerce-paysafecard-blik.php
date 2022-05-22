@@ -5,7 +5,7 @@
  * Description: Paysafecard and BLIK Manual WooCommerce Payments
  * Author: Julian Korgol
  * Author URI: https://juliankorgol.com/
- * Version: 1.0.0
+ * Version: 1.1.0
  */
 
 
@@ -101,9 +101,20 @@ function paysafecard_blik_jk_init_gateway_class() {
          */
         public function payment_fields() {
 
-            echo '<p><b>Uwaga, administrator sklepu będzie się z Tobą kontaktował za pomocą adresu e-mail, który podałeś powyżej lub za pomocą Messengera/Discorda, do którego możesz wkleić link w dodatkowych informacjach, do zamówienia. (Jeśli link nie wchodzi, może być identyfikator Discord).</b></p>';
+            echo '<p><b>Uwaga, administrator sklepu będzie się z Tobą kontaktował za pomocą adresu e-mail, który podałeś powyżej lub za pomocą Messengera/Discorda, do którego możesz wkleić link w dodatkowych informacjach, do zamówienia. (Jeśli link nie wchodzi, może być identyfikator Discord). Pamiętaj, że administrator użyje tylko zaufanej metody kontaktu. <a href="https://s.exoticrp.eu/kontakt/" target="_blank">To są zaufane profile</a>, z których może pochodzić kontakt od nas.</b></p>';
 
         }
 
+        public function process_payment( $order_id ) {
+
+            $order = wc_get_order( $order_id );
+
+            $order->reduce_order_stock();
+            return array(
+                'result' => 'success',
+                'redirect' => $this->get_return_url( $order )
+            );
+
+        }
     }
 }
